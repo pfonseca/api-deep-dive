@@ -302,6 +302,55 @@ paths:
               default: application/problem+json
           schema:
             $ref: '#/definitions/userNotFound'
+
+
+  #----------- User's Whitelist -------
+  /users/{userId}/whitelist:
+    x-summary: User's whitelist
+
+    parameters:
+      - name: userId
+        in: path
+        description: Id of the User
+        required: true
+        type: string
+        x-example: '1234'
+
+    get:
+      summary: Retrieve User's Whitelist
+      description: Retrieve user's whitelist details
+      responses:
+        200:
+          description: A particular User's whitelist
+          schema:
+            $ref: '#/definitions/halWishlist'
+        404:
+          description: The request User wasn't found
+          headers:
+            Content-Type:
+              type: string
+              default: application/problem+json
+          schema:
+            $ref: '#/definitions/userNotFound'
+
+    post:
+      summary: Create User's Whitelist
+      consumes:
+        - application/json
+      description: Retrieve user's whitelist details
+      parameters:
+        - name: Whitelist
+          in: body
+          description: User's whitelist to be updated
+          required: true
+          schema:
+            $ref: '#/definitions/wishProduct'
+      responses:
+        200:
+          description: A particular User's whitelist
+          schema:
+            $ref: '#/definitions/halWishProduct'
+
   # Add a new endpoint for operations on a specific user. This endpoint will require a parameter in it's path. Please define this parameter below. Remember, that the parameter's name has to relate to the one put in the path above. Don't forget about setting its type.
   # This endpoint will allow to retrieve specific user's information. User's data is immutable and permanent.
   # -------------------------------------------------------------------------------------------
@@ -455,7 +504,7 @@ definitions:
     example:
       status: unavailable
 
-  ## Product Define the product object. This object has 6 properties: title, description, category, image, status and tags. The first 4 are simple strings. Status is a string which can have one of 3 v\alues: available, pending, sold and out. 
+  ## Product Define the product object. This object has 6 properties: title, description, category, image, status and tags. The first 4 are simple strings. Status is a string which can have one of 3 values: available, pending, sold and out. 
   # Tags is an arrays of strings. Title, description and category are requiered parameters.
   # Extra task - try adding an example. This will be handy for mocking later.
   product:
@@ -472,10 +521,10 @@ definitions:
       status:
         type: string
         enum: [
-                 available,
-                 pending,
-                 sold,
-                 out
+          available,
+          pending,
+          sold,
+          out
         ]
       tags:
         type: array
@@ -554,7 +603,7 @@ definitions:
   # HAL Single review
   halReview:
     type: object
-    properties:      
+    properties:
       id:
         type: string
       createdAt:
