@@ -351,6 +351,45 @@ paths:
           schema:
             $ref: '#/definitions/halWishProduct'
 
+    delete:
+      summary: delete all User's Whitelist
+      consumes:
+        - application/json
+      description: Delete user's whitelist
+      responses:
+        204:
+          description: Delete a particular User's whitelist
+
+
+  /users/{userId}/whitelist/{whitelistId}:
+    x-summary: User's whitelist by id
+
+    parameters:
+      - name: userId
+        in: path
+        description: Id of the User
+        required: true
+        type: string
+        x-example: '1234'
+
+
+    delete:
+      summary: delete a specific User's Whitelist
+      consumes:
+        - application/json
+      description: Delete user's whitelist
+      parameters:
+        - name: whitelistId
+          in: path
+          description: Id of the Whitelist
+          required: true
+          type: string
+          x-example: '1234'
+      responses:
+        204:
+          description: Delete a particular User's whitelist
+
+
   # Add a new endpoint for operations on a specific user. This endpoint will require a parameter in it's path. Please define this parameter below. Remember, that the parameter's name has to relate to the one put in the path above. Don't forget about setting its type.
   # This endpoint will allow to retrieve specific user's information. User's data is immutable and permanent.
   # -------------------------------------------------------------------------------------------
