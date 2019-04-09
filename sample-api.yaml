@@ -248,8 +248,60 @@ paths:
 
   # Add a new API definition for collection of users. This collection will allow to add a new item into it. The user data is a JSON object. 
   # -------------------------------------------------------------------------------------------
-  # /users:
-  
+  /users:
+    x-summary: List of Users
+
+    get:
+      summary: List Users
+      description: Retrieve a list of users
+      parameters:
+        - name: offset
+          in: query
+          description: Number of results to skip from the start of the list
+          required: false
+          type: string
+          default: '0'
+          x-example: '10'
+        - name: limit
+          in: query
+          description: The maximum number of reusults to return
+          required: false
+          type: string
+          default: '10'
+          x-example: '5'
+      responses:
+        200:
+          description: The list of Users
+          schema:
+            $ref: '#/definitions/halUser'
+
+  /users/{userId}:
+    x-summary: User
+
+    parameters:
+      - name: userId
+        in: path
+        description: Id of the User
+        required: true
+        type: string
+        x-example: '1234'
+
+    get:
+      summary: Retrieve User
+      description: Retrieve user details
+      responses:
+        200:
+          description: A particular User
+          schema:
+            $ref: '#/definitions/halUser'
+        404:
+          description: The request User wasn't found
+          headers:
+            Content-Type:
+              type: string
+              default: application/problem+json
+          schema:
+            $ref: '#/definitions/userNotFound'
   # Add a new endpoint for operations on a specific user. This endpoint will require a parameter in it's path. Please define this parameter below. Remember, that the parameter's name has to relate to the one put in the path above. Don't forget about setting its type.
   # This endpoint will allow to retrieve specific user's information. User's data is immutable and permanent.
   # -------------------------------------------------------------------------------------------
