@@ -21,7 +21,10 @@ info:
     - Delete a specific product from the wishlist
     - Clear the wishlist
 
-# Add contact information. Refer to the OpenAPI Specification for version 2.0 (https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md)
+  contact:
+    name: Paulo Vitor Mira Fonseca
+    url: http://pfonseca.adidas.com/
+    email: paulovitor.mira@adidas.com
 
 produces:
   - application/hal+json      # Representation message format
@@ -60,7 +63,7 @@ paths:
       parameters:
         - $ref: '#/parameters/offset'
         - $ref: '#/parameters/limit'
-        # - $ref: '#/parameters/status' # TODO: define the parameter in the appropriate section
+        - $ref: '#/parameters/status'
       responses:
         200:
           description: The list of Products
@@ -76,7 +79,6 @@ paths:
           in: body
           description: Product to be created
           required: true
-          # Go to line 343 to define the product object model. Read the comments there are use other models as examples.
           schema:
             $ref: '#/definitions/product'
       responses:
@@ -144,10 +146,61 @@ paths:
   # Please reuse the defined parameters and object models.
   # Remember, that the HTTP code for creating and retrieving resources is different. Also take into account fact, that certain user information is created on the server side after receiving user data. What is the implication of that?
   # -------------------------------------------------------------------------------------------
-  # /products/{productId}/reviews:
+  /products/{product_id}/reviews:
 
+    x-summary: List of Product Reviews
+
+    parameters:
+      - name: product_id
+        in: path
+        description: Id of the Product
+        required: true
+        type: string
+        x-example: 'DB1124'
+
+    get:
+      summary: List product reviews
+      description: Retrieve a list of product reviews
+      parameters:
+        - name: offset
+          in: query
+          description: Number of results to skip from the start of the list
+          required: false
+          type: string
+          default: '0'
+          x-example: '10'
+        - name: limit
+          in: query
+          description: The maximum number of reusults to return
+          required: false
+          type: string
+          default: '10'
+          x-example: '5'
+      responses:
+        200:
+          description: The list of Product review
+          schema:
+            $ref: '#/definitions/halReview'
+
+    post:
+      summary: Create a New Product Review
+      consumes:
+        - application/json
+      parameters:
+        - name: Review
+          in: body
+          description: Product Review to be created
+          required: true
+          schema:
+            $ref: '#/definitions/review'
+      responses:
+        201:
+          description: Newly created product review
+          schema:
+            $ref: '#/definitions/halReviews'
   
   # -------------------------------------------------------------------------------------------
+
   /products/{product_id}/reviews-stats:
 
     x-summary: List of Product Reviews Stats
@@ -257,9 +310,19 @@ parameters:
       - prices
       - assets
 
-  # TODO: define the 'status' parameter. Follow examples above
-  # status:
-  #   name: status
+  status:
+    name: status
+    in: query
+    description: Product status
+    required: false
+    type: string
+    enum: [
+      available,
+      pending,
+      sold,
+      out
+    ]
+    x-example: "available"
 
 definitions:
   #
@@ -340,10 +403,36 @@ definitions:
     example:
       status: unavailable
 
-  # Product
-  # Define the product object. This object has 6 properties: title, description, category, image, status and tags. The first 4 are simple strings. Status is a string which can have one of 3 values: available, pending, sold and out. Tags is an arrays of strings. Title, description and category are requiered parameters.
+  ## Product Define the product object. This object has 6 properties: title, description, category, image, status and tags. The first 4 are simple strings. Status is a string which can have one of 3 v\alues: available, pending, sold and out. 
+  # Tags is an arrays of strings. Title, description and category are requiered parameters.
   # Extra task - try adding an example. This will be handy for mocking later.
-  # product:
+  product:
+    type: object
+    properties:
+      title:
+        type: string
+      description:
+        type: string
+      category:
+        type: string
+      image:
+        type: string
+      status:
+        type: string
+        enum: [
+                 available,
+                 pending,
+                 sold,
+                 out
+        ]
+      tags:
+        type: array
+        items:
+          type: string
+    required:
+      - title
+      - description
+      - category
   # --------------------------------------------------------------------------
 
   # Product Not Found Error
